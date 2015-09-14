@@ -67,7 +67,7 @@ WSGI_APPLICATION = 'advo.wsgi.application'
 #     'default': {
 #         'ENGINE': 'django.db.backends.mysql',
 #         'NAME': 'advocate',
-#         'USER': 'advocate',
+#         'USER': 'alexandergoldberg',
 #         'PASSWORD': '',
 #         'HOST': 'localhost'
 #     }
