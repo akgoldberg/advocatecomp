@@ -72,3 +72,12 @@ class Interaction(models.Model):
 	category = models.IntegerField(choices=INTERACTION_CATEGORIES, default=0)
 	donationAmount = models.IntegerField(null=True, blank=True, verbose_name='Donation amount (if applicable)')
 	note = models.TextField()
+
+class Update(models.Model):
+	title = models.CharField(max_length=255, verbose_name='Title') 
+	text = models.TextField(blank = True, verbose_name='Text') 
+	pub_date = models.DateTimeField(null = True)
+	contact = models.ForeignKey(Contact)
+	img = models.ImageField(null = True, blank = True, upload_to = '.', verbose_name = 'Image')
+	file_upload = models.FileField(null = True, blank = True, upload_to = '.')
+
