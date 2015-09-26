@@ -137,16 +137,6 @@ class ContactAdmin(admin.ModelAdmin):
 class InteractionAdmin(admin.ModelAdmin):
 	list_filter = ['category']
 
-class UpdateAdmin(admin.ModelAdmin):
-    list_display = ['title', 'pub_date','published_by']
-    def published_by(self, obj):
-        return obj.contact
-    published_by.short_description = 'Published By'
-    published_by.admin_order_field = 'contact'
-    search_fields = ['title']
-    list_filter = ['pub_date']
-
 # Register your models here.
 admin.site.register(Contact, ContactAdmin)
 admin.site.register(Interaction, InteractionAdmin)
-admin.site.register(Update, UpdateAdmin)

@@ -1,10 +1,7 @@
 from django.db import models
 
-# class Board(models.Model):
-# 	name = models.CharField(max_length=255)
-
 # Create your models here.
-class Contact(models.Model):
+class User(models.Model):
 	def full_name(self):
 		return self.article + " " + self.firstName + " " + self.lastName + " " + self.title
 
@@ -21,6 +18,7 @@ class Contact(models.Model):
 	firstName = models.CharField(max_length=255, verbose_name='First name') 
 	middleName = models.CharField(max_length=255, blank=True, verbose_name='Middle name')
 	lastName = models.CharField(max_length=255, blank=True, verbose_name='Last name')
+	photo = models.ImageField(null = True, blank = True, upload_to = './profiles', verbose_name = 'Profile Picture')
 	article = models.CharField(max_length=255, blank=True, verbose_name='Article')
 	title = models.CharField(max_length=255, blank=True, verbose_name='Title')
 	nickName = models.CharField(max_length=255, blank=True, verbose_name='Nickname')
@@ -45,33 +43,15 @@ class Contact(models.Model):
 	board = models.CharField(max_length=255, blank=True, verbose_name='Board')
 	positionHeld = models.CharField(max_length=255, blank=True, verbose_name='Position held')
 	publishedWork = models.TextField(blank=True, verbose_name='Published work')
-	notes = models.TextField(blank=True, verbose_name='Notes')
-	donationBracket = models.CharField(max_length=255, blank=True, verbose_name='Donation bracket')
-	#donationYears = 
-	#donatedAmount = 
-	#lastContact = 
-	tier = models.CharField(max_length=255, blank=True, verbose_name='Tier')
+	notes = models.TextField(blank=True, verbose_name='Notes')	
 	formCategory = models.CharField(max_length=255, blank=True, verbose_name='Form category')
 	dateAdded = models.DateField(auto_now_add=True, blank=True, verbose_name='Date added')
 
 
-class Interaction(models.Model):
-	def __unicode__(self):
-		return str(self.date) + ': ' + self.note
-
-	INTERACTION_CATEGORIES = ((0, 'Other'),
-							  (1, 'Phone call'),
-							  (2, 'Email'),
-							  (3, 'Donation'),
-							  (4, 'Purchase'),
-							  (5, 'Subscription Start'),
-							  (6, 'Subscription End'))
-
-	contact = models.ForeignKey(Contact)
-	date = models.DateField(null=True, blank=True)
-	category = models.IntegerField(choices=INTERACTION_CATEGORIES, default=0)
-	donationAmount = models.IntegerField(null=True, blank=True, verbose_name='Donation amount (if applicable)')
-	note = models.TextField()
-
-
-
+class Post(models.Model):
+	title = models.CharField(max_length=255, verbose_name='Title') 
+	text = models.TextField(blank = True, verbose_name='Text') 
+	pub_date = models.DateTimeField(null = True)
+	user = models.ForeignKey(User)
+	img = models.ImageField(null = True, blank = True, upload_to = '.', verbose_name = 'Image')
+	file_upload = models.FileField(null = True, blank = True, upload_to = '.')

@@ -42,7 +42,8 @@ INSTALLED_APPS = (
     'ajax_select',
     'south',
     'magazine',    
-    'contacts'
+    'contacts',
+    'alumni'
 )
 
 MIDDLEWARE_CLASSES = (

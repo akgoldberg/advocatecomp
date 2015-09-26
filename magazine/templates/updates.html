@@ -1,0 +1,39 @@
+{% extends "base.html" %} {% block content %}
+{% load staticfiles %}
+{% load filename %}
+
+<h1>ALUMNI NEWS</h1>
+{% if latest_news_list %}
+    {% for update in latest_news_list %}
+    <div class="container">
+	    <div class = "row">
+	    	<h2 class="subheader" style="font-size:18px;">{{ update.title }}</h2>
+	    	<h5>
+	    		<a href="{% url 'profile' update.user.id %}" style="color:black; font-size:16px;">			{{update.user}}
+	    		</a>
+	    		{%if update.user.graduationYear%}, Class of {{update.user.graduationYear}} {%endif%}
+	    	</h5>
+	    	<h5><i>Published on {{update.pub_date}}</i></h5>
+	    	<p>{{update.text|urlizetrunc:40}}</p>
+	    	{% if update.img %}
+	    		<figure><img class='img-responsive' style="margin: 0 auto;" src="{{MEDIA_URL}}{{update.img}}" height="200" width="200"></figure>
+	    	{% endif %}
+	    	{% if update.file_upload %}
+	    	<div class="download">
+		        <div class="title">
+		        	<a href="{{ update.file_upload.url }}">{{update.file_upload|filename}}</a>
+		        </div>
+		        <div class="size">{{update.file_upload.file.size|filesizeformat}} </div>
+   			</div>
+	    	{% endif %}
+	    </div>
+	</div>
+    {% endfor %}
+    </ul>
+{% else %}
+	<p>
+    <div class = "row"><h3>No recent updates.</h3></div>
+    </p>
+{% endif %}
+
+{% endblock %}
