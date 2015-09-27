@@ -1,7 +1,10 @@
 {% extends "base.html" %}
+{% load render_table from django_tables2 %}
 
 {% block content %}
+<link rel="stylesheet" href="static/django_tables2/themes/paleblue/css/screen.css" />
+
 <div class="container">
 	<h1 class="header">ALUMNI DATABASE</h1>
-</div>
+	{% render_table table %}
 {% endblock %}

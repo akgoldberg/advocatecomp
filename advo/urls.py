@@ -11,7 +11,7 @@ urlpatterns = patterns('',
     # Examples:
     url(r'^$', 'magazine.views.index'),
     url(r'^about$', 'magazine.views.masthead'),
-    url(r'^alumni$', 'magazine.views.alumni'),
+    url(r'^alumni$', 'alumni.views.alumnidb'),
     url(r'^grappelli/', include('grappelli.urls')),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^admin/lookups/', include(ajax_select_urls)),

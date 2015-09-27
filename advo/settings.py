@@ -43,7 +43,9 @@ INSTALLED_APPS = (
     'south',
     'magazine',    
     'contacts',
-    'alumni'
+    'alumni',
+    'django_tables2',
+    'django_filters',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -108,6 +110,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     #http://stackoverflow.com/questions/3756841/django-media-url-blank
     'django.core.context_processors.media',
     'magazine.context_processors.search_typeahead',
+    'django.core.context_processors.request',
 )
 
 AJAX_LOOKUP_CHANNELS = {
