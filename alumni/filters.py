@@ -21,4 +21,3 @@ class UserFilter(FilterSet):
 	class Meta:
 		model = User
 		fields = ['firstName','lastName', 'state', 'board', 'positionHeld']
-		together = ['firstName', 'lastName']
