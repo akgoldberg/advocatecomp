@@ -4,6 +4,7 @@ from django.shortcuts import get_object_or_404, render_to_response
 from models import *
 from django_tables2 import RequestConfig
 from tables import UserTable
+from filters import UserFilter
 
 # Create your views here.
 def updates(request):
@@ -20,6 +21,8 @@ def profile(request, user_id):
 
 def alumnidb(request):
 	template_name = 'alumni.html'
-	table = UserTable(User.objects.all())
-	RequestConfig(request).configure(table)
-	return render(request, template_name, {'table' : table})
+	queryset = User.objects.all()
+	f = UserFilter(request.GET, queryset=queryset)
+	table = UserTable(f.qs)
+	RequestConfig(request, paginate={"per_page": 25, "page": 1}).configure(table)
+	return render(request, template_name, {'table': table, 'filter': f})

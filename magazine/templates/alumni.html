@@ -6,5 +6,9 @@
 
 <div class="container">
 	<h1 class="header">ALUMNI DATABASE</h1>
+	  <form action="" method="get">
+        {{ filter.form.as_p }}
+        <input type="submit" />
+    </form>
 	{% render_table table %}
 {% endblock %}
