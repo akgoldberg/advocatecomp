@@ -1,7 +1,8 @@
 from django.db import models
+from django.contrib.auth.models import User
 
-# class Board(models.Model):
-# 	name = models.CharField(max_length=255)
+class Board(models.Model):
+	name = models.CharField(max_length=255)
 
 # Create your models here.
 class Contact(models.Model):
@@ -17,6 +18,7 @@ class Contact(models.Model):
 	class Meta:
 		ordering = ('firstName', 'lastName') # default sort order
 		unique_together = ['firstName', 'lastName'] # no two contacts can have the same first/last name
+
 
 	firstName = models.CharField(max_length=255, verbose_name='First name') 
 	middleName = models.CharField(max_length=255, blank=True, verbose_name='Middle name')
@@ -53,8 +55,10 @@ class Contact(models.Model):
 	tier = models.CharField(max_length=255, blank=True, verbose_name='Tier')
 	formCategory = models.CharField(max_length=255, blank=True, verbose_name='Form category')
 	dateAdded = models.DateField(auto_now_add=True, blank=True, verbose_name='Date added')
-
-
+	# whether or not the contact is an alumni
+	alum = models.BooleanField(verbose_name = 'Alumnus', default = False)
+	user = models.OneToOneField(User, null = True)
+	
 class Interaction(models.Model):
 	def __unicode__(self):
 		return str(self.date) + ': ' + self.note
@@ -73,5 +77,17 @@ class Interaction(models.Model):
 	donationAmount = models.IntegerField(null=True, blank=True, verbose_name='Donation amount (if applicable)')
 	note = models.TextField()
 
+class Post(models.Model):
+	title = models.CharField(max_length=255, verbose_name='Title') 
+	text = models.TextField(blank = True, verbose_name='Text') 
+	pub_date = models.DateTimeField(null = True)
+	user = models.ForeignKey(Contact) 
 
+class Image(models.Model):
+	name = models.CharField(max_length = 255, blank = True)
+	img = models.ImageField(null = True, blank = True, upload_to = '.', verbose_name = 'Image')
+	post = models.ForeignKey(Post)
 
+class File(models.Model):
+	file_upload = models.FileField(null = True, blank = True, upload_to = '.')
+	post = models.ForeignKey(Post)

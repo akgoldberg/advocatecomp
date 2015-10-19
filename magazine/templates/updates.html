@@ -15,17 +15,17 @@
 	    	</h5>
 	    	<h5><i>Published on {{update.pub_date}}</i></h5>
 	    	<p>{{update.text|urlizetrunc:40}}</p>
-	    	{% if update.img %}
-	    		<figure><img class='img-responsive' style="margin: 0 auto;" src="{{MEDIA_URL}}{{update.img}}" height="200" width="200"></figure>
-	    	{% endif %}
-	    	{% if update.file_upload %}
+	    	{% for image in update.image_set.all %}
+	    		<figure><img class='img-responsive' style="margin: 0 auto;" src="{{MEDIA_URL}}{{image.img}}" height="200" width="200"></figure
+	    	{% endfor %}
+	    	{% for f in update.file_set.all %}
 	    	<div class="download">
 		        <div class="title">
-		        	<a href="{{ update.file_upload.url }}">{{update.file_upload|filename}}</a>
+		        	<a href="{{ f.file_upload.url }}">{{f.file_upload|filename}}</a>
 		        </div>
-		        <div class="size">{{update.file_upload.file.size|filesizeformat}} </div>
+		        <div class="size">{{f.file_upload.size|filesizeformat}} </div>
    			</div>
-	    	{% endif %}
+	    	{% endfor %}
 	    </div>
 	</div>
     {% endfor %}

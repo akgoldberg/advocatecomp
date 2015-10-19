@@ -43,9 +43,9 @@ INSTALLED_APPS = (
     'south',
     'magazine',    
     'contacts',
-    'alumni',
     'django_tables2',
     'django_filters',
+    'crispy_forms',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -126,6 +126,16 @@ TINYMCE_DEFAULT_CONFIG = {
     'cleanup_on_startup': True,
     'custom_undo_redo_levels': 10,
 }
+
+TEMPLATE_DIRS = {
+    'magazine/templates'
+}
+
+ANONYMOUS_USER_ID = -1
+
+LOGIN_REDIRECT_URL = '/'
+
+LOGIN_URL = 'django.contrib.auth.views.login'
 
 try:
     from local_settings import *

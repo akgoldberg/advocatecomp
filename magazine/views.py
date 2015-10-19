@@ -9,13 +9,19 @@ import random
 from django.shortcuts import redirect
 from itertools import chain
 import logging
-
+from crispy_forms.helper import FormHelper
 logger = logging.getLogger("magazine")
+
+from django.contrib.auth.views import login
 
 # Create your views here.
 def index(request):
-  template_name = 'index.html'
-  return render_to_response(template_name, context_instance=RequestContext(request))
+	if not request.user.is_authenticated():
+		return login(request)
+	else:
+		return redirect('updates/', 'contacts.views.updates')
+		# template_name = 'updates.html'
+		# return render_to_response(template_name, context_instance=RequestContext(request))
 
 def masthead(request):
   template_name = 'about_us.html'

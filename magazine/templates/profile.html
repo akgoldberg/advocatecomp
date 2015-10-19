@@ -1,9 +1,9 @@
 {% extends "base.html" %} {% block content %}
 {% load staticfiles %}
 
-<h1> {{user}} </h1>
-{%if user.graduationYear%} <h2>  Class of {{user.graduationYear}} </h2> {%endif%} 
-{%if user.photo%} 
+<h1> {{contact}} </h1>
+{%if contact.graduationYear%} <h2>  Class of {{contact.graduationYear}} </h2> {%endif%} 
+{%if contact.photo%} 
 <figure>
 	<img class='img-responsive' style="margin: 0 auto;" src="{{MEDIA_URL}}{{user.photo}}" height="200" width="200">
 </figure>

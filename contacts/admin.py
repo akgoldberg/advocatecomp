@@ -137,6 +137,43 @@ class ContactAdmin(admin.ModelAdmin):
 class InteractionAdmin(admin.ModelAdmin):
 	list_filter = ['category']
 
+class FileInLine(admin.StackedInline):
+    model = File
+    extra = 0
+    max_num = 3
+
+class ImageInLine(admin.StackedInline):
+    model = Image
+    extra = 0
+    max_num = 3
+
+class FileAdmin(admin.ModelAdmin):
+     def get_model_perms(self, request):
+        """
+        Return empty perms dict thus hiding the model from admin index.
+        """
+        return {}
+
+class ImageAdmin(admin.ModelAdmin):
+     def get_model_perms(self, request):
+        """
+        Return empty perms dict thus hiding the model from admin index.
+        """
+        return {}
+
+class PostAdmin(admin.ModelAdmin):
+    inlines = [ImageInLine, FileInLine]
+    list_display = ['title', 'pub_date','published_by']
+    def published_by(self, obj):
+        return obj.user
+    published_by.short_description = 'Published By'
+    published_by.admin_order_field = 'user'
+    search_fields = ['title']
+    list_filter = ['pub_date']
+
 # Register your models here.
+admin.site.register(Image, ImageAdmin)
+admin.site.register(File, FileAdmin)
 admin.site.register(Contact, ContactAdmin)
 admin.site.register(Interaction, InteractionAdmin)
+admin.site.register(Post, PostAdmin)

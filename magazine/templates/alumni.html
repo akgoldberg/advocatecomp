@@ -1,14 +1,18 @@
 {% extends "base.html" %}
 {% load render_table from django_tables2 %}
-
+{% load crispy_forms_tags %}
 {% block content %}
+
 <link rel="stylesheet" href="static/django_tables2/themes/paleblue/css/screen.css" />
 
 <div class="container">
 	<h1 class="header">ALUMNI DATABASE</h1>
-	  <form action="" method="get">
-        {{ filter.form.as_p }}
-        <input type="submit" />
-    </form>
+	<center>
+	<form action="" method="get" class = 'form-inline'> 
+    	{% crispy filter.form filter.form.helper %}
+    	<button type="submit" value="Filter" class="btn-primary">  Filter </button>
+	</form>
+	</center>
+    <br>
 	{% render_table table %}
 {% endblock %}
