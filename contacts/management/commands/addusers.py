@@ -7,9 +7,15 @@ from django.contrib.auth.models import Group
 def defaultUser(model):
 	username = model.firstName.lower() + model.lastName.lower()
 	try:
+		g, created = Group.objects.get_or_create(name = 'alumni')
+		g.save()
 		u = User.objects.create_user(username, password="12345", email=model.email1,
 		first_name = model.firstName, last_name = model.lastName)
+		g.user_set.add(u)
+		u.is_staff = True
 		u.save()
+		g.user_set.add(u)
+		g.save()
 	except:
 		u = None
 		pass

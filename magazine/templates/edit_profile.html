@@ -33,7 +33,9 @@
 		</tr>
 		<tr>
 			<td colspan="2" align = "center">
-			<button type="button" class="btn-primary">  Edit </button>
+			<form style="display: inline" action="/admin/auth/user/{{user.id}}" method="get">
+ 			<button class="btn-primary">  Edit </button>
+			</form>
 			</td>
 		</tr>
 	</table>
@@ -88,6 +90,7 @@
 				</td>
 			</tr>
 			</table>
+	</form>
 	{% if success %}
 		<p> <i> Password sucessfully changed! </i> <p>
 	{% endif %}
@@ -156,11 +159,14 @@
 		</table>
 	</center>
 	</div>
-	{% endwith %}
+	
 
 </div>
 <center>
-	<p> <button type="button" class="btn-primary">  Edit </button> </p>
+	<form action="/admin/contacts/contact/{{contact.id}}" method="get">
+ 			<button class="btn-primary">  Edit </button>
+	</form>
 </center>
+{% endwith %}
 </div>
 {% endblock %}

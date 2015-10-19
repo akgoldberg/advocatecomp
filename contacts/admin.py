@@ -5,6 +5,9 @@ from django.http import HttpResponse
 from django.utils.encoding import smart_str
 from django.db.models import Sum
 from .models import *
+from django.contrib.auth.admin import UserAdmin
+from django.contrib.auth.models import User
+from django import forms
 
 class InteractionInline(admin.TabularInline):
 	model = Interaction
@@ -118,21 +121,32 @@ class DonationFilter(SimpleListFilter):
             return queryset
 
 class ContactAdmin(admin.ModelAdmin):
-	def queryset(self, request):
-		return Contact.objects.annotate(donated=Sum('interaction__donationAmount'))
-
-	def total_donated(self, inst):
+    def queryset(self, request):
+        qs = Contact.objects.annotate(donated=Sum('interaction__donationAmount'))
+        if request.user.is_superuser:
+            return qs
+        return qs.filter(user = request.user)
+	
+    def total_donated(self, inst):
 		return inst.donated
-	total_donated.admin_order_field = 'donated' # allows you to sort by this field
 
-	list_display = ('firstName', 'lastName', 'total_donated', 'graduationYear',
+
+    total_donated.admin_order_field = 'donated' # allows you to sort by this field
+
+    list_display = ('firstName', 'lastName', 'total_donated', 'graduationYear',
 					'otherDegrees', 'profession', 'board',
 					'positionHeld', 'full_address', 'city',
 					'state', 'zipCode', 'email1', 'dateAdded')
-	list_filter = [DonationFilter, 'state', 'graduationYear', 'board', 'positionHeld', 'tier', 'article', 'followed', 'formCategory']
-	search_fields = ['firstName', 'middleName', 'lastName', 'nickName']
-	inlines = [InteractionInline]
-	actions = [export_xls]
+    list_filter = [DonationFilter, 'state', 'graduationYear', 'board', 'positionHeld', 'tier', 'article', 'followed', 'formCategory']
+    search_fields = ['firstName', 'middleName', 'lastName', 'nickName']
+    inlines = [InteractionInline]
+    actions = [export_xls]
+
+    def get_readonly_fields(self, request, obj = None):
+        if request.user.is_superuser:
+            return []
+        else:
+            return ['user']
 
 class InteractionAdmin(admin.ModelAdmin):
 	list_filter = ['category']
@@ -170,6 +184,38 @@ class PostAdmin(admin.ModelAdmin):
     published_by.admin_order_field = 'user'
     search_fields = ['title']
     list_filter = ['pub_date']
+    def get_readonly_fields(self, request, obj = None):
+        if request.user.is_superuser:
+            return []
+        else:
+            return ['user']
+    def queryset(self, request):
+        qs = super(PostAdmin, self).queryset(request)
+        if request.user.is_superuser:
+            return qs
+        else:
+            return qs.filter(user = request.user.contact)
+
+
+
+class CustomUserAdmin(UserAdmin):
+    list_display = ['username', 'email', 'first_name', 'last_name']
+    ordering = ['username']
+
+    def get_form(self, request, obj=None, **kwargs):
+         ## Dynamically overriding
+        if not request.user.is_superuser:
+            self.fieldsets[2][1]["fields"] = ()
+            self.fieldsets[3][1]["fields"] = ()
+        form = super(CustomUserAdmin,self).get_form(request, obj, **kwargs)
+        return form
+    
+    def queryset(self, request):
+        qs = super(UserAdmin, self).queryset(request)
+        if request.user.is_superuser:
+            return qs
+        else:
+            return qs.filter(username = request.user.username)
 
 # Register your models here.
 admin.site.register(Image, ImageAdmin)
@@ -177,3 +223,5 @@ admin.site.register(File, FileAdmin)
 admin.site.register(Contact, ContactAdmin)
 admin.site.register(Interaction, InteractionAdmin)
 admin.site.register(Post, PostAdmin)
+admin.site.unregister(User)
+admin.site.register(User, CustomUserAdmin)
