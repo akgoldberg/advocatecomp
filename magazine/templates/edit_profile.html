@@ -1,0 +1,166 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1 class="header">ACCOUNT SETTINGS</h1> 
+
+<div class = "container">
+<div class = "row">
+
+	<div class="col-xs-12 col-sm-12 col-md-6">
+	<h2 class="subheader">ACCOUNT INFO</h2>
+	<center>
+	<table>
+		<tr> 
+			<th>Username:</th>
+			<td align="right">{{user.username}}</td>
+		</tr>
+		<tr> 
+			<th>Email:</th>
+			<td align="right"> {{user.email}} </td>
+		</tr>
+		<tr> 
+			<th> First name: </th>
+			<td align = "right"> {{user.first_name}} </td>
+		</tr>
+		<tr> 
+			<th> Last name: </th>
+			<td align = "right"> {{user.last_name}} </td>
+		</tr>
+		<tr> 
+			<th> Last login: </th>
+			<td align = "right"> {{user.last_login}} </td>
+		</tr>
+		<tr>
+			<td colspan="2" align = "center">
+			<button type="button" class="btn-primary">  Edit </button>
+			</td>
+		</tr>
+	</table>
+	</center>
+	</div>
+
+
+	<div class="col-xs-12 col-sm-12 col-md-6">
+	
+	<h2 class="subheader">CHANGE PASSWORD</h2>
+	<center>
+	<form action="" method="post"  role="form"> 
+		{% csrf_token %}
+		{% if form.non_field_errors %}
+		<div class="form_errors">
+	  		{% for err in form.non_field_errors %}
+		  	<div class="form_error_message">{{ err }}</div>
+		  	{% endfor %}
+		</div>	
+		{% endif %}
+
+		
+			<table>
+	  		
+			{% for field in form %}
+	  		<div {% if field.errors %}class="field_error"{% endif %}>
+
+	    		<tr>
+		    		<th align = "left">
+		   				{{ field.label_tag }}
+		   			</th>
+		   			<td align = "right">
+		   				{{ field }}
+		   			</td>
+		   		</tr>
+		   		<tr>
+		   			<td colspan = "2" align = "center">
+	    			{% for err in field.errors %}
+	    		
+	    			<p style="font-size:15px"><i>
+	    				{{ err }}
+	    			</i></p>
+	    			</td>
+	    		</tr>
+	    		{% endfor %}
+				
+			</div>	
+			{% endfor %}
+			<tr>
+				<td colspan = "2" align = "center">
+					<button type="submit" class="btn-primary">  Submit </button>
+				</td>
+			</tr>
+			</table>
+	{% if success %}
+		<p> <i> Password sucessfully changed! </i> <p>
+	{% endif %}
+	<center>
+
+	</div>
+</div>
+
+<div class = "row">
+
+	<h2 class="subheader">PERSONAL INFO</h2>
+	
+	{% with user.contact as contact %}
+	<div class="col-xs-12 col-sm-12 col-md-6">
+	<center>
+		<table>
+		<tr> 
+			<th>Name:</th>
+			<td align="right">{{contact}}</td>
+		</tr>
+		<tr> 
+			<th>Email:</th>
+			<td align="right"> {{contact.email1}} </td>
+		</tr>
+		<tr>
+			<th>Graduation Year:</th>
+			<td align="right"> {{contact.graduationYear}}
+		</tr>
+		<tr>
+			<th>Board:</th>
+			<td align="right"> {{contact.board}}
+		</tr>
+
+		<tr>
+			<th>Position Held:</th>
+			<td align="right"> {{contact.positionHeld}} </td>
+		</tr>
+		</table>
+	</center>
+	</div>
+	
+	<div class="col-xs-12 col-sm-12 col-md-6">
+		<center>
+		<table>
+		<tr> 
+			<th>Other degrees:</th>
+			<td align="right">{{contact.otherDegrees}}</td>
+		</tr>
+		<tr> 
+			<th>City:</th>
+			<td align="right"> {{contact.city}} </td>
+		</tr>
+		<tr>
+			<th>State:</th>
+			<td align="right"> {{contact.state}}
+		</tr>
+		<tr>
+			<th>Zip code:</th>
+			<td align="right"> {{contact.zipCode}}
+		</tr>
+
+		<tr>
+			<th>Street address:</th>
+			<td align="right"> {{contact.streetAddress1}} </td>
+		</tr>
+		</table>
+	</center>
+	</div>
+	{% endwith %}
+
+</div>
+<center>
+	<p> <button type="button" class="btn-primary">  Edit </button> </p>
+</center>
+</div>
+{% endblock %}
