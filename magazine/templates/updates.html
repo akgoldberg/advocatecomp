@@ -3,6 +3,7 @@
 {% load filename %}
 
 <h1>ALUMNI NEWS</h1>
+
 {% if latest_news_list %}
     {% for update in latest_news_list %}
     <div class="container">
@@ -35,5 +36,17 @@
     <div class = "row"><h3>No recent updates.</h3></div>
     </p>
 {% endif %}
+</br>
+</br>
+<p>
+<center>
+	<form action="/admin/contacts/post/add" method="get">
+ 			<button class = "btn btn-default btn-md col-md-6" style = "font-family: 'league_gothicregular';">  New Post </button>
+	</form>
+	<form action="/admin/contacts/post" method="get">
+		<button class="btn btn-default btn-md col-md-6" style = "font-family: 'league_gothicregular';"> Edit Posts </button>
+	</form
+</center>
+</p>
 
 {% endblock %}

@@ -58,7 +58,7 @@ class Contact(models.Model):
 	# whether or not the contact is an alumni
 	alum = models.BooleanField(verbose_name = 'Alumnus', default = False)
 	user = models.OneToOneField(User, null = True)
-	
+
 class Interaction(models.Model):
 	def __unicode__(self):
 		return str(self.date) + ': ' + self.note

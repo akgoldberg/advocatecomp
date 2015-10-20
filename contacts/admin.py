@@ -8,6 +8,7 @@ from .models import *
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
 from django import forms
+from django.http import HttpResponseRedirect
 
 class InteractionInline(admin.TabularInline):
 	model = Interaction
@@ -121,6 +122,16 @@ class DonationFilter(SimpleListFilter):
             return queryset
 
 class ContactAdmin(admin.ModelAdmin):
+    def response_change(self, request, obj, post_url_continue="../%s/"):
+        if '_continue' in request.POST:
+            return super(ContactAdmin, self).response_add(request, obj, post_url_continue % obj.id)
+        elif '_addanother' in request.POST:
+            return HttpResponseRedirect("../add")
+        elif request.user.is_superuser:
+            return HttpResponseRedirect("../")
+        else:
+            return HttpResponseRedirect("/account/")
+
     def queryset(self, request):
         qs = Contact.objects.annotate(donated=Sum('interaction__donationAmount'))
         if request.user.is_superuser:
@@ -175,7 +186,36 @@ class ImageAdmin(admin.ModelAdmin):
         """
         return {}
 
+# class PostUserForm(forms.ModelForm):
+#     class Meta:
+#         model = Post
+
+
+# class PostAdminForm(forms.ModelForm):
+#      class Meta:
+#         model = Post
+
 class PostAdmin(admin.ModelAdmin):
+    def response_change(self, request, obj, post_url_continue="../%s/"):
+        if '_continue' in request.POST:
+            return super(PostAdmin, self).response_add(request, obj, post_url_continue % obj.id)
+        elif '_addanother' in request.POST:
+            return HttpResponseRedirect("../add")
+        elif request.user.is_superuser:
+            return HttpResponseRedirect("../")
+        else:
+            return HttpResponseRedirect("/updates/")
+
+    def response_add(self, request, obj, post_url_continue="../%s/"):
+        if '_continue' in request.POST:
+            return super(PostAdmin, self).response_add(request, obj, post_url_continue % obj.id)
+        elif '_addanother' in request.POST:
+            return HttpResponseRedirect("../add")
+        elif request.user.is_superuser:
+            return HttpResponseRedirect("../")
+        else:
+            return HttpResponseRedirect("/updates/") 
+
     inlines = [ImageInLine, FileInLine]
     list_display = ['title', 'pub_date','published_by']
     def published_by(self, obj):
@@ -184,11 +224,13 @@ class PostAdmin(admin.ModelAdmin):
     published_by.admin_order_field = 'user'
     search_fields = ['title']
     list_filter = ['pub_date']
-    def get_readonly_fields(self, request, obj = None):
-        if request.user.is_superuser:
-            return []
-        else:
-            return ['user']
+    exclude = ['user',]
+
+    def save_model(self, request, obj, form, change):
+        if not change:
+            obj.author = request.user
+        obj.save()
+        
     def queryset(self, request):
         qs = super(PostAdmin, self).queryset(request)
         if request.user.is_superuser:
@@ -196,17 +238,37 @@ class PostAdmin(admin.ModelAdmin):
         else:
             return qs.filter(user = request.user.contact)
 
+    def save_model(self, request, obj, form, change):
+        if not change:
+            obj.user = request.user.contact
+        obj.save()
+
 
 
 class CustomUserAdmin(UserAdmin):
+    
+    def response_change(self, request, obj, post_url_continue="../%s/"):
+        if '_continue' in request.POST:
+            return super(CustomUserAdmin, self).response_add(request, obj, post_url_continue % obj.id)
+        elif '_addanother' in request.POST:
+            return HttpResponseRedirect("../add")
+        elif request.user.is_superuser:
+            return HttpResponseRedirect("../")
+        else:
+            return HttpResponseRedirect("/account/")
+    
     list_display = ['username', 'email', 'first_name', 'last_name']
     ordering = ['username']
 
     def get_form(self, request, obj=None, **kwargs):
          ## Dynamically overriding
         if not request.user.is_superuser:
-            self.fieldsets[2][1]["fields"] = ()
-            self.fieldsets[3][1]["fields"] = ()
+            self.fieldsets = ((None, {
+                'fields': ('username','password'),
+            }),
+            ('Personal info', {
+                'fields' : ('first_name', 'last_name','email',),
+            }),)
         form = super(CustomUserAdmin,self).get_form(request, obj, **kwargs)
         return form
     
