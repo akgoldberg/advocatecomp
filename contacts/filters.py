@@ -18,8 +18,8 @@ class ContactFilter(FilterSet):
 	board = ChoiceFilter(choices=BOARD_CHOICES, label = 'State')
 	state = ChoiceFilter(choices=STATE_CHOICES, label = 'Board')
 	positionHeld = ChoiceFilter(choices=POSITION_CHOICES, label='Position Held')
-	firstName = CharFilter(lookup_type='startswith', label='First Name')
-	lastName = CharFilter(lookup_type='startswith', label='Last Name')
+	firstName = CharFilter(lookup_type='istartswith', label='First Name')
+	lastName = CharFilter(lookup_type='istartswith', label='Last Name')
 
 	class Meta:
 		model = Contact

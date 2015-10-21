@@ -2,7 +2,7 @@
 
 {% block content %}
 
-<h1 class="header">ACCOUNT SETTINGS</h1> 
+<h1 class="header">USER SETTINGS</h1> 
 
 <div class = "container">
 <div class = "row">
@@ -99,9 +99,10 @@
 	</div>
 </div>
 
+{% if fields %}
 <div class = "row">
 
-	<h2 class="subheader">PERSONAL INFO</h2>
+	<h2 class="subheader">PROFILE INFO</h2>
 	
 	{% with user.contact as contact %}
 	<div class="col-xs-12 col-sm-12 col-md-6">
@@ -168,5 +169,6 @@
 	</form>
 </center>
 {% endwith %}
+{% endif %}
 </div>
 {% endblock %}

@@ -12,6 +12,7 @@ from forms import ContactFormHelper
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth.models import Group
 
 
 class LoggedInMixin(object):
@@ -22,16 +23,21 @@ class LoggedInMixin(object):
 @login_required
 def updates(request):
 	template_name = 'updates.html'
-	latest_news_list = Post.objects.all().order_by('-pub_date')[:20]
+	latest_news_list = Post.objects.filter(visible = True).order_by('-pub_date')[:20]
 	context = {'latest_news_list': latest_news_list}
 	return render(request, template_name, context)
 
-@login_required
-def profile(request, contact_id):
-	template_name = 'profile.html'
-	c = get_object_or_404(Contact, pk=contact_id)
-	context = {'contact': c}
-	return render(request, template_name, context)
+def model_to_list(instance):
+    hiddenFields = ['id', 'firstName', 'lastName','user', 'alum', 'dateAdded']
+    data = []
+    for field in instance._meta.fields:
+        if (field.name not in hiddenFields):
+            obj = field.value_from_object(instance)
+            if isinstance(field, ForeignKey):
+                obj = field.rel.to.objects.get(pk=obj)
+            pair = (field.verbose_name, obj)
+            data.append(pair)
+    return data
 
 def model_to_dict(instance):
     data = {}
@@ -42,13 +48,24 @@ def model_to_dict(instance):
     return data
 
 @login_required
+def profile(request, contact_id):
+    template_name = 'profile.html'
+    c = get_object_or_404(Contact, pk=contact_id)
+    context = {'fields': model_to_list(c)}
+    context['contact'] = c
+    return render(request, template_name, context)
+
+@login_required
 def edit_user(request):
     # change the password
     user=request.user
     success = False
     form = PasswordChangeForm(user)
     template_name = 'edit_profile.html'
-    fields = model_to_dict(user.contact)
+    if user in Group.objects.get(name="alumni").user_set.all():
+        fields = model_to_dict(user.contact)
+    else:
+        fields = None
     if request.method == 'POST':
         form = PasswordChangeForm(user=user, data=request.POST)
         if form.is_valid():

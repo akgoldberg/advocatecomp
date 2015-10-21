@@ -186,15 +186,6 @@ class ImageAdmin(admin.ModelAdmin):
         """
         return {}
 
-# class PostUserForm(forms.ModelForm):
-#     class Meta:
-#         model = Post
-
-
-# class PostAdminForm(forms.ModelForm):
-#      class Meta:
-#         model = Post
-
 class PostAdmin(admin.ModelAdmin):
     def response_change(self, request, obj, post_url_continue="../%s/"):
         if '_continue' in request.POST:
@@ -216,19 +207,34 @@ class PostAdmin(admin.ModelAdmin):
         else:
             return HttpResponseRedirect("/updates/") 
 
+    def delete_view(self, request, object_id, extra_context=None):
+        """Redirect to website index page on delete."""
+
+        response = super(PostAdmin, self).delete_view(request, object_id, extra_context)
+
+        # Use our own redirect
+        if isinstance(response, HttpResponseRedirect) and not request.user.is_superuser:
+            return HttpResponseRedirect('/') # Any URL here
+
+        return response
+
     inlines = [ImageInLine, FileInLine]
-    list_display = ['title', 'pub_date','published_by']
+    list_display = ['title', 'pub_date','published_by','visible',]
     def published_by(self, obj):
         return obj.user
     published_by.short_description = 'Published By'
     published_by.admin_order_field = 'user'
     search_fields = ['title']
     list_filter = ['pub_date']
-    exclude = ['user',]
+
+    def get_form(self, request, obj=None, **kwargs):
+        if not request.user.is_superuser:
+            kwargs['exclude'] = ['user', 'visible',]
+        return super(PostAdmin, self).get_form(request, obj, **kwargs)
 
     def save_model(self, request, obj, form, change):
-        if not change:
-            obj.author = request.user
+        if not change and not request.user.is_superuser:
+            obj.user = request.user.contact
         obj.save()
         
     def queryset(self, request):
@@ -237,11 +243,6 @@ class PostAdmin(admin.ModelAdmin):
             return qs
         else:
             return qs.filter(user = request.user.contact)
-
-    def save_model(self, request, obj, form, change):
-        if not change:
-            obj.user = request.user.contact
-        obj.save()
 
 
 

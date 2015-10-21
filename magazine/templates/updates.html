@@ -4,6 +4,20 @@
 
 <h1>ALUMNI NEWS</h1>
 
+<div class="container">
+<p>
+<center>
+	<form action="/admin/contacts/post/add" method="get">
+ 			<button class = "btn btn-default btn-md col-md-6" style = "font-size: 20px; font-family: 'league_gothicregular';">  New Post </button>
+	</form>
+	<form action="/admin/contacts/post" method="get">
+		<button class="btn btn-default btn-md col-md-6" style = "font-size: 20px; font-family: 'league_gothicregular';"> Edit Posts </button>
+	</form/>
+	<p><i> Your post needs to be approved by an administrator before it will become visible.</i></p>
+</center>
+</p>
+</div>
+
 {% if latest_news_list %}
     {% for update in latest_news_list %}
     <div class="container">
@@ -38,15 +52,6 @@
 {% endif %}
 </br>
 </br>
-<p>
-<center>
-	<form action="/admin/contacts/post/add" method="get">
- 			<button class = "btn btn-default btn-md col-md-6" style = "font-family: 'league_gothicregular';">  New Post </button>
-	</form>
-	<form action="/admin/contacts/post" method="get">
-		<button class="btn btn-default btn-md col-md-6" style = "font-family: 'league_gothicregular';"> Edit Posts </button>
-	</form
-</center>
-</p>
+
 
 {% endblock %}

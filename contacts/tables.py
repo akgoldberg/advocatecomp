@@ -3,10 +3,9 @@ from models import Contact
 from django_tables2.utils import A  # alias for Accessor
 
 class ContactTable(tables.Table):
+	firstName = tables.LinkColumn('contacts.views.profile', args = [tables.A("pk"),])
 	class Meta:
 		model = Contact
 		fields = ('firstName', 'lastName', 'graduationYear',
-					'otherDegrees', 'profession', 'board',
-					'positionHeld', 'city',
-					'state', 'zipCode', 'email1')
+					 'board', 'positionHeld', 'city', 'state')
 		attrs = {"class" : "paleblue"}

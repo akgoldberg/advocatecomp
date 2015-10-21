@@ -82,6 +82,7 @@ class Post(models.Model):
 	text = models.TextField(blank = True, verbose_name='Text') 
 	pub_date = models.DateTimeField(null = True)
 	user = models.ForeignKey(Contact) 
+	visible = models.BooleanField(default = False, verbose_name = 'Visible');
 
 class Image(models.Model):
 	name = models.CharField(max_length = 255, blank = True)
@@ -89,5 +90,5 @@ class Image(models.Model):
 	post = models.ForeignKey(Post)
 
 class File(models.Model):
-	file_upload = models.FileField(null = True, blank = True, upload_to = '.')
+	file_upload = models.FileField(null = True, blank = True, upload_to = '.', verbose_name = 'File')
 	post = models.ForeignKey(Post)
